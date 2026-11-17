@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2 class="mb-4">Inicio</h2>
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card text-bg-primary"><div class="card-body"><h6>Clientes</h6><h3>{{ d.clientes }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card text-bg-success"><div class="card-body"><h6>Productos</h6><h3>{{ d.productos }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card text-bg-warning"><div class="card-body"><h6>Ventas</h6><h3>{{ d.ventas }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card text-bg-dark"><div class="card-body"><h6>Total vendido</h6><h3>${{ '%.2f'|format(d.total_vendido) }}</h3></div></div></div>
+</div>
+{% if session.rol == 'Administrador' %}
+<div class="card">
+    <div class="card-header">Productos con stock bajo (5 o menos)</div>
+    <ul class="list-group list-group-flush">
+        {% for p in bajo_stock %}
+        <li class="list-group-item d-flex justify-content-between">{{ p.nombre_producto }}<span class="badge bg-danger">{{ p.stock }}</span></li>
+        {% else %}
+        <li class="list-group-item text-muted">No hay productos con stock bajo.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+{% endblock %}

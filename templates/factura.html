@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h3>Factura {{ f.numero_factura }}</h3>
+            <div class="text-end">
+                <div>{{ f.fecha_emision.strftime('%d/%m/%Y %H:%M') }}</div>
+                <div class="text-muted">Pago: {{ f.metodo_pago }}</div>
+            </div>
+        </div>
+        <hr>
+        <p class="mb-1"><strong>Cliente:</strong> {{ f.nombre }} ({{ f.email }})</p>
+        <p class="mb-1"><strong>Dirección:</strong> {{ f.direccion }}, {{ f.ciudad }}</p>
+        <p><strong>Vendedor:</strong> {{ f.vendedor }}</p>
+        <table class="table">
+            <thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Subtotal</th></tr></thead>
+            <tbody>
+                {% for d in detalle %}
+                <tr><td>{{ d.nombre_producto }}</td><td>{{ d.cantidad }}</td><td>${{ d.precio_unitario }}</td><td>${{ d.subtotal }}</td></tr>
+                {% endfor %}
+            </tbody>
+            <tfoot><tr><th colspan="3" class="text-end">Total</th><th>${{ f.monto_total }}</th></tr></tfoot>
+        </table>
+        <button class="btn btn-secondary" onclick="window.print()">Imprimir</button>
+        <a href="{{ url_for('facturas') }}" class="btn btn-outline-secondary">Volver</a>
+    </div>
+</div>
+{% endblock %}

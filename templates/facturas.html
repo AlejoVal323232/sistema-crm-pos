@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2 class="mb-3">Historial de facturas</h2>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+            <thead><tr><th>N° factura</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th><th>Pago</th><th>Total</th><th></th></tr></thead>
+            <tbody>
+                {% for f in filas %}
+                <tr>
+                    <td>{{ f.numero_factura }}</td>
+                    <td>{{ f.fecha_emision.strftime('%d/%m/%Y %H:%M') }}</td>
+                    <td>{{ f.cliente }}</td>
+                    <td>{{ f.vendedor }}</td>
+                    <td>{{ f.metodo_pago }}</td>
+                    <td>${{ f.monto_total }}</td>
+                    <td class="text-end"><a class="btn btn-sm btn-primary" href="{{ url_for('factura', id_venta=f.id_venta) }}">Ver</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center text-muted">Aún no hay facturas</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

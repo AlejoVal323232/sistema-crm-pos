@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>{{ e.titulo }}</h2>
+    <div>
+        {% if entidad == 'clientes' %}
+        <a href="{{ url_for('reporte_clientes') }}" class="btn btn-outline-secondary">Reporte por nacionalidad</a>
+        {% endif %}
+        <a href="{{ url_for('formulario', entidad=entidad) }}" class="btn btn-primary">+ Nuevo</a>
+    </div>
+</div>
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+            <thead>
+                <tr>
+                    {% for c in e.mostrar %}<th>{{ c.replace('_', ' ').title() }}</th>{% endfor %}
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in filas %}
+                <tr>
+                    {% for c in e.mostrar %}<td>{{ f[c] if f[c] is not none else '' }}</td>{% endfor %}
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-warning" href="{{ url_for('formulario', entidad=entidad, id=f[e.pk]) }}">Editar</a>
+                        <form method="post" action="{{ url_for('eliminar', entidad=entidad, id=f[e.pk]) }}" class="d-inline"
+                              onsubmit="return confirm('¿Eliminar este registro?')">
+                            <button class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="{{ e.mostrar|length + 1 }}" class="text-center text-muted">Sin registros</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

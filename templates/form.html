@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<h2 class="mb-3">{{ 'Editar' if registro else 'Nuevo' }} - {{ e.titulo }}</h2>
+<div class="card card-body">
+    <form method="post">
+        <div class="row">
+            {% for c in e.campos %}
+            <div class="col-md-6 mb-3">
+                <label class="form-label">{{ c[1] }}</label>
+                {% if c[2] == 'select' %}
+                <select name="{{ c[0] }}" class="form-select">
+                    {% for o in c[3] %}<option {{ 'selected' if registro.get(c[0]) == o }}>{{ o }}</option>{% endfor %}
+                </select>
+                {% else %}
+                <input type="{{ 'number' if c[2] == 'decimal' else c[2] }}" name="{{ c[0] }}" class="form-control"
+                       {% if c[2] == 'decimal' %}step="0.01" min="0"{% elif c[2] == 'number' %}min="0"{% endif %}
+                       {% if c[2] != 'password' %}value="{{ registro.get(c[0]) if registro.get(c[0]) is not none else '' }}"{% endif %}
+                       {% if c[0] != 'descripcion' and not (c[2] == 'password' and registro) %}required{% endif %}>
+                {% if c[2] == 'password' and registro %}<div class="form-text">Déjala vacía para no cambiarla.</div>{% endif %}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        <button class="btn btn-primary">Guardar</button>
+        <a href="{{ url_for('listar', entidad=entidad) }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

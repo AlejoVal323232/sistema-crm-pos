@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block contenido %}
+<style>
+    @media print {
+        body { background: #fff !important; }
+        .grupo { break-inside: avoid; }
+    }
+</style>
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <h2>Reporte de clientes por nacionalidad</h2>
+    <div class="d-print-none">
+        <a href="{{ url_for('listar', entidad='clientes') }}" class="btn btn-secondary">Volver</a>
+        <button type="button" class="btn btn-primary" onclick="window.print()">Imprimir reporte</button>
+    </div>
+</div>
+<p class="text-muted">Generado el {{ fecha.strftime('%d/%m/%Y %H:%M') }} - Total de clientes: {{ filas|length }}</p>
+
+{% for g in filas|groupby('pais') %}
+<div class="grupo mb-4">
+    <h5 class="border-bottom pb-1">{{ g.grouper }} <span class="badge bg-secondary">{{ g.list|length }}</span></h5>
+    <table class="table table-sm table-striped">
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Ciudad</th><th>Registro</th></tr>
+        </thead>
+        <tbody>
+            {% for c in g.list %}
+            <tr>
+                <td>{{ c.id_cliente }}</td>
+                <td>{{ c.nombre }}</td>
+                <td>{{ c.email }}</td>
+                <td>{{ c.telefono }}</td>
+                <td>{{ c.ciudad }}</td>
+                <td>{{ c.fecha_registro.strftime('%d/%m/%Y') if c.fecha_registro else '' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p class="text-center text-muted">No hay clientes registrados.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRM POS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+{% if session.id_usuario %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 d-print-none">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">CRM POS</a>
+        <div class="navbar-nav me-auto flex-row gap-3">
+            <a class="nav-link" href="{{ url_for('listar', entidad='clientes') }}">Clientes</a>
+            <a class="nav-link" href="{{ url_for('nueva_venta') }}">Nueva venta</a>
+            <a class="nav-link" href="{{ url_for('facturas') }}">Facturas</a>
+            {% if session.rol == 'Administrador' %}
+            <a class="nav-link" href="{{ url_for('listar', entidad='productos') }}">Productos</a>
+            <a class="nav-link" href="{{ url_for('listar', entidad='usuarios') }}">Usuarios</a>
+            {% endif %}
+        </div>
+        <span class="navbar-text me-3">{{ session.nombre }} ({{ session.rol }})</span>
+        <a class="btn btn-outline-light btn-sm" href="{{ url_for('logout') }}">Salir</a>
+    </div>
+</nav>
+{% endif %}
+<div class="container pb-5">
+    {% for categoria, msg in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ categoria }} d-print-none">{{ msg }}</div>
+    {% endfor %}
+    {% block contenido %}{% endblock %}
+</div>
+</body>
+</html>
